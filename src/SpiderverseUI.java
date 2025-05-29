@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.LinkedList;
 
@@ -20,27 +21,61 @@ public class SpiderverseUI extends JFrame {
     private SpiderverseHeroManager manager = new SpiderverseHeroManager();
 
     public SpiderverseUI() {
+        // Inicialización de componentes
+        mainPanel = new JPanel(new BorderLayout());
+
+        txtCodigo = new JTextField(10);
+        txtNombre = new JTextField(10);
+        cbPoder = new JComboBox<>();
+        cbUniverso = new JComboBox<>();
+        cbExperiencia = new JComboBox<>();
+        btnAgregar = new JButton("Agregar");
+        btnBuscar = new JButton("Buscar");
+        btnFiltrar = new JButton("Filtrar");
+        tablaHeroes = new JTable();
+        txtBuscarCodigo = new JTextField(10);
+        cbFiltrarPoder = new JComboBox<>();
+
+        // Panel superior para formulario
+        JPanel formPanel = new JPanel(new GridLayout(6, 2));
+        formPanel.add(new JLabel("Código:")); formPanel.add(txtCodigo);
+        formPanel.add(new JLabel("Nombre:")); formPanel.add(txtNombre);
+        formPanel.add(new JLabel("Poder:")); formPanel.add(cbPoder);
+        formPanel.add(new JLabel("Universo:")); formPanel.add(cbUniverso);
+        formPanel.add(new JLabel("Experiencia:")); formPanel.add(cbExperiencia);
+        formPanel.add(btnAgregar); formPanel.add(btnBuscar);
+
+        // Panel inferior para filtro
+        JPanel filterPanel = new JPanel();
+        filterPanel.add(new JLabel("Buscar código:")); filterPanel.add(txtBuscarCodigo);
+        filterPanel.add(new JLabel("Filtrar por poder:")); filterPanel.add(cbFiltrarPoder);
+        filterPanel.add(btnFiltrar);
+
+        // Añadir a panel principal
+        mainPanel.add(formPanel, BorderLayout.NORTH);
+        mainPanel.add(new JScrollPane(tablaHeroes), BorderLayout.CENTER);
+        mainPanel.add(filterPanel, BorderLayout.SOUTH);
+
+        // Configurar frame
         setContentPane(mainPanel);
         setTitle("Registro de Héroes del Spiderverse");
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
 
-        // ComboBox data
+        // Configurar combos
         cbPoder.setModel(new DefaultComboBoxModel<>(new String[]{
                 "Sentido Arácnido", "Trepa Muros", "Fuerza Sobrehumana", "Agilidad Mejorada", "Tejido de Telaraña"
         }));
-
         cbFiltrarPoder.setModel(cbPoder.getModel());
-
         cbUniverso.setModel(new DefaultComboBoxModel<>(new String[]{
                 "Tierra-616", "Tierra-1610", "Tierra-12041", "Tierra-90214", "Tierra-138"
         }));
-
         cbExperiencia.setModel(new DefaultComboBoxModel<>(new Integer[]{1, 2, 3, 4, 5}));
 
         actualizarTabla(manager.getHeroes());
 
+        // Listeners
         btnAgregar.addActionListener(e -> {
             try {
                 int codigo = Integer.parseInt(txtCodigo.getText());
@@ -100,6 +135,7 @@ public class SpiderverseUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new SpiderverseUI();
+        SwingUtilities.invokeLater(SpiderverseUI::new);
     }
 }
+
